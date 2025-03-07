@@ -1,5 +1,5 @@
 import { fetchImages } from './js/pixabay-api';
-import { renderGallery, clearGallery, toggleLoadMoreButton, smoothScroll } from './js/render-functions';
+import { renderGallery, clearGallery, toggleLoadMoreButton, smoothScroll, showLoader,hideLoader } from './js/render-functions';
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css"
 
@@ -11,33 +11,38 @@ let currentPage = 1;
 let currentQuery = '';
 let totalHits = 0;
 
+
 searchForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    
+
     currentQuery = searchInput.value.trim()
     
   if (!currentQuery) {
         iziToast.error({ title: 'Error', message: 'Enter a search query', position: 'topRight' });
         return;
     }  
-        clearGallery();
+    clearGallery();
+     loader.style.display = "block"
     currentPage = 1;
     toggleLoadMoreButton(false);
+showLoader()
 
         try {
         const { hits, totalHits: total } = await fetchImages(currentQuery, currentPage);
         totalHits = total;
-        
-        renderGallery(hits);
+            renderGallery(hits);
+            
         if (hits.length < totalHits) toggleLoadMoreButton(true);
     } catch (error) {
         iziToast.error({ title: 'Error', message: 'Failed to fetch images. Try again.', position: 'topRight' });
+        } finally {
+            hideLoader
     }
 })
 
 loadMoreBtn.addEventListener('click', async () => {
     currentPage++;
-    
+    showLoader()
     try {
         const { hits } = await fetchImages(currentQuery, currentPage);
         renderGallery(hits);
@@ -49,5 +54,7 @@ loadMoreBtn.addEventListener('click', async () => {
         }
     } catch (error) {
         iziToast.error({ title: 'Error', message: 'Failed to fetch more images.', position: 'topRight' });
+    } finally {
+        hideLoader()
     }
 });

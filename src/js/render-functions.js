@@ -5,6 +5,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const gallery = document.querySelector('.gallery')
 const loadMoreBtn = document.querySelector('#load-more')
+const loader = document.querySelector('#loader');
 let lightbox = new SimpleLightbox('.gallery a', { captionData: 'alt', captionDelay: 250 })
 
 export function createGalleryMarkup(images) {
@@ -42,4 +43,10 @@ export function toggleLoadMoreButton(visible) {
 export function smoothScroll() {
     const { height } = gallery.firstElementChild.getBoundingClientRect()
     window.scrollBy({top: height * 2, behavior: 'smooth'})
+}
+export function showLoader() {
+    loader.style.display = 'block';
+}
+export function hideLoader() {
+    loader.style.display = 'none';
 }
