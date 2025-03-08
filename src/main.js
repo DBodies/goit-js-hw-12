@@ -22,10 +22,9 @@ searchForm.addEventListener('submit', async (event) => {
         return;
     }  
     clearGallery();
-     loader.style.display = "block"
     currentPage = 1;
     toggleLoadMoreButton(false);
-showLoader()
+    showLoader()
 
         try {
         const { hits, totalHits: total } = await fetchImages(currentQuery, currentPage);
